@@ -9,6 +9,7 @@ class Proyectil {
 	var property position
 	var property tipoProyectil
 	var property danio
+	var property velocidad
 	
 	method image(){
 		return "Proyectil_" + tipoProyectil.toString() + ".png"
@@ -16,7 +17,7 @@ class Proyectil {
 	method disparar(){
 		self.position(self.direccion().siguiente(self.position()))
 		game.addVisual(self)
-		game.onTick(500,"desplazarProyectil" + self.identity().toString(),{self.desplazar()})
+		game.onTick(velocidad,"desplazarProyectil" + self.identity().toString(),{self.desplazar()})
 	}
 	
 	method desplazar(){

@@ -6,7 +6,7 @@ object randomizer {
 		return (1..(game.width() - 1)).anyOne()
 	}
 	method randomY(){
-		return (1..(game.height() - 4)).anyOne()
+		return (1..(game.height() - 5)).anyOne()
 	}
 	method randomPosition(){
 		return game.at(self.randomX(),self.randomY())
