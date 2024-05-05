@@ -8,6 +8,7 @@ class Proyectil {
 	var property direccion
 	var property position
 	var property tipoProyectil
+	var property danio
 	
 	method image(){
 		return "Proyectil_" + tipoProyectil.toString() + ".png"
@@ -28,5 +29,11 @@ class Proyectil {
 	method desaparecer(){
 		game.removeTickEvent("desplazarProyectil" + self.identity().toString())
 		game.removeVisual(self)
+	}
+	
+	method collision(personaje){
+		game.say(self, "Le pegue a " + personaje.toString())
+		personaje.recibirDanio(danio)
+		self.desaparecer()
 	}
 }

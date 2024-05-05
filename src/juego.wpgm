@@ -2,6 +2,7 @@ import wollok.game.*
 import hero.*
 import jefe.*
 import direcciones.*
+import props.*
 
 program juego {
 
@@ -11,17 +12,19 @@ program juego {
 	game.width(15)
 	game.height(12)
 	game.boardGround("fondo.png")
-	game.addVisualCharacter(hero)
+	game.addVisual(hero)
 	game.addVisual(jefe)
+	muroInvisible.crearMuroInvisible()
 	jefe.iniciar()
-	keyboard.up().onPressDo({hero.mirarHacia(arriba)})
-	keyboard.right().onPressDo({hero.mirarHacia(derecha)})
-	keyboard.left().onPressDo({hero.mirarHacia(izquierda)})
-	keyboard.down().onPressDo({hero.mirarHacia(abajo)})
+	keyboard.up().onPressDo({hero.mover(arriba)})
+	keyboard.right().onPressDo({hero.mover(derecha)})
+	keyboard.left().onPressDo({hero.mover(izquierda)})
+	keyboard.down().onPressDo({hero.mover(abajo)})
 	keyboard.a().onPressDo({hero.dispararHacia(izquierda)})
 	keyboard.w().onPressDo({hero.dispararHacia(arriba)})
 	keyboard.d().onPressDo({hero.dispararHacia(derecha)})
 	keyboard.s().onPressDo({hero.dispararHacia(abajo)})
 	keyboard.o().onPressDo({jefe.recibirDanio(10)})
+	game.onCollideDo(jefe, { algo => algo.collision(jefe) })
 	game.start() 
 }

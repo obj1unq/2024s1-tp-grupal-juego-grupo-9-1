@@ -89,13 +89,17 @@ object jefe {
 	}
 
 	method atacar() {
-		new Proyectil(direccion = abajo , position = self.position(), tipoProyectil = "Jefe").disparar()
+		new Proyectil(direccion = abajo , position = self.position(), tipoProyectil = "Jefe", danio = 10).disparar()
 	}
 
 	method serDerrotado() {
 		game.removeTickEvent("Ataques Boss")
 		game.removeVisual(self)
 		partes.forEach({ parte => parte.eliminarse()})
+	}
+	
+	method esAtravesable() {
+		return false
 	}
 
 }
@@ -120,7 +124,7 @@ class ParteBoss {
 
 	method disparar() {
 		direccionMirada = direcciones.mirandoAlHeroe(self.position())
-		new Proyectil(direccion = direccionMirada , position = self.position(), tipoProyectil = "ParteBoss").disparar()
+		new Proyectil(direccion = direccionMirada , position = self.position(), tipoProyectil = "ParteBoss", danio = 10).disparar()
 	}
 
 	method eliminarse() {
