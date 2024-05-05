@@ -94,7 +94,7 @@ object direcciones{
 	
 	method puedeIr(desde, direccion) {
 		const aDondeVoy = direccion.siguiente(desde) 
-		return not self.hayObstaculo(aDondeVoy) 
+		return not self.esUnBorde(aDondeVoy) && not self.hayObstaculo(aDondeVoy) 
 	}
 	
 	method hayObstaculo(position) {

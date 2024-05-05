@@ -5,40 +5,33 @@ class Invisible {
 	
 	var property position
 	
-	method image() = "Boss_Parte.png"
-	
 	method esAtravesable(){
 		return false
 	}	
-	
-	method collision(personaje){
-		game.say(self, "Atravesaste el muro")
-	}
 }
 
 object muroInvisible{
 	
-	var contador = 0
+	var contador = 1
 	
 	const property direcciones = []
 	
-	method llenarDirecciones(){
-		if (contador < game.width()){
-			direcciones.add(game.at(contador, game.height()-3))
+	method llenarDirecciones(posicionY){
+		if (contador < game.width()-1){
+			direcciones.add(game.at(contador, posicionY))
 			contador ++
-			self.llenarDirecciones()
+			self.llenarDirecciones(posicionY)
 		}
 		
 	}
 	
-	method crearMuroInvisible(){
-		self.llenarDirecciones()
+	method crearMuroInvisible(posicionY){
+		self.llenarDirecciones(posicionY)
 		direcciones.forEach({posicion => self.crearMuroAt(posicion)})		
 	}
 	
 	method crearMuroAt(posicion) {
 		const muroNuevo = new Invisible(position = posicion)
 		game.addVisual(muroNuevo)
-	}
-	
+	}	
 }

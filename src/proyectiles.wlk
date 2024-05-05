@@ -32,8 +32,9 @@ class Proyectil {
 	}
 	
 	method collision(personaje){
-		game.say(self, "Le pegue a " + personaje.toString())
 		personaje.recibirDanio(danio)
 		self.desaparecer()
 	}
+	
+	method esAtravesable() = true
 }

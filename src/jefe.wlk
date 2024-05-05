@@ -11,7 +11,7 @@ import direcciones.*
 object jefe {
 
 	var property cantidadEscudos = 3
-	var property position = game.at(7, 10)
+	var property position = game.at(7, 9)
 	var aguanteEscudo = 90
 	var aguante = 40
 	var property moviendoA = derecha
@@ -36,7 +36,7 @@ object jefe {
 
 	method mover() {
 		// este metodo supone toda la ventana como posible movimiento
-		if (direcciones.esUnBorde(self.position())) {
+		if (direcciones.esUnBorde(moviendoA.siguiente(position) )) {
 			self.moviendoA((self.moviendoA().opuesto()))
 			self.position(self.moviendoA().siguiente(self.position()))
 		} else {

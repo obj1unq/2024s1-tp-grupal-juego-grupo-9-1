@@ -6,24 +6,28 @@ object hero {
 
 	var property position = game.center()
 	var property direccion = abajo
+	var property hp = 50
+	var property estado = vivo
 
 	method image() {
 		return "Hero_" + direccion.toString().capitalize() + ".png"
 	}
+	
+	method text() = hp.toString()
 
 	method dispararHacia(_direccion) {
 		new Proyectil(
 			direccion = _direccion, 
 			position = self.position(), 
-			tipoProyectil = self.toString() + "_" + 
-			_direccion.toString(), danio = 10
+			tipoProyectil = self.toString() + "_" + _direccion.toString(), danio = 10
 		).disparar()
 	}
 
 	method mover(_direccion) {
-		self.validarMover(_direccion)
-		direccion = _direccion
-		position = direccion.siguiente(position)
+		if(self.puedeMover(_direccion)){
+			direccion = _direccion
+			position = direccion.siguiente(position)			
+		}
 	}
 	
 	method validarMover(_direccion){
@@ -33,8 +37,55 @@ object hero {
 	}
 	
 	method puedeMover(_direccion){
-		return direcciones.puedeIr(position,_direccion)
+		return estado.puedeMover() && direcciones.puedeIr(position,_direccion)
+	}
+	
+	method recibirDanio(cantidad){
+		if(hp > 1){
+			hp -= cantidad.max(0)
+		}
+		else{
+			self.derrotado()
+		}
+	}
+	
+	method derrotado(){
+		estado = derrotado
+		estado.activar()
+	}
+	
+	method victoria(){
+		estado = ganador
+		estado.activar()
 	}
 
 }
 
+object vivo{
+	
+	method puedeMover() = true
+	
+	method activar(){}
+}
+
+object derrotado{
+	
+	method puedeMover() = false
+	
+	method activar(){
+		game.say(hero, "Me han derrotado!")
+		game.schedule(1500, {game.stop()})
+	}
+}
+
+
+object ganador{
+	
+	method puedeMover() = false
+	
+	method activar(){
+		game.say(hero, "Victoria! He derrotado al jefazo!")
+		game.schedule(1500, {game.stop()})
+	}
+	
+}
