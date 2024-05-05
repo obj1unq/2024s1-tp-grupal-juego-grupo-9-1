@@ -10,7 +10,7 @@ object hero {
 	var property estado = vivo
 
 	method image() {
-		return "Hero_" + direccion.toString().capitalize() + ".png"
+		return "Hero_" + direccion.toString().capitalize() + "_" + estado + ".png"
 	}
 	
 	method text() = hp.toString()
@@ -19,7 +19,9 @@ object hero {
 		new Proyectil(
 			direccion = _direccion, 
 			position = self.position(), 
-			tipoProyectil = self.toString() + "_" + _direccion.toString(), danio = 10
+			tipoProyectil = self.toString() + "_" + _direccion.toString(), 
+			danio = 10,
+			velocidad = 300
 		).disparar()
 	}
 
@@ -51,11 +53,13 @@ object hero {
 	
 	method derrotado(){
 		estado = derrotado
+	 	direccion = abajo
 		estado.activar()
 	}
 	
 	method victoria(){
 		estado = ganador
+		direccion = abajo
 		estado.activar()
 	}
 
@@ -74,7 +78,7 @@ object derrotado{
 	
 	method activar(){
 		game.say(hero, "Me han derrotado!")
-		game.schedule(1500, {game.stop()})
+		game.schedule(2500, {game.stop()})
 	}
 }
 
