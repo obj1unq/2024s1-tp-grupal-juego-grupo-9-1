@@ -4,12 +4,13 @@ import direcciones.*
 /* estos proyectiles no tienen colicion con objetos pues no se como se haran obstaculos si hay 
   ni como sera la vida del heroe, en los assets esta un proyectil parte por si hace falta cambiar el tipo de daño
   y por ende hacer 2 tipos distintos de proyectiles*/
-class ProyectilBoss {
+class Proyectil {
 	var property direccion
 	var property position
+	var property tipoProyectil
 	
 	method image(){
-		return "Proyectil_Boss.png"
+		return "Proyectil_" + tipoProyectil.toString() + ".png"
 	}
 	method disparar(){
 		self.position(self.direccion().siguiente(self.position()))

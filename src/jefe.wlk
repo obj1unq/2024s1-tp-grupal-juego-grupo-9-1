@@ -89,7 +89,7 @@ object jefe {
 	}
 
 	method atacar() {
-		new ProyectilBoss(direccion = abajo , position = self.position()).disparar()
+		new Proyectil(direccion = abajo , position = self.position(), tipoProyectil = "Jefe").disparar()
 	}
 
 	method serDerrotado() {
@@ -120,7 +120,7 @@ class ParteBoss {
 
 	method disparar() {
 		direccionMirada = direcciones.mirandoAlHeroe(self.position())
-		new ProyectilBoss(direccion = direccionMirada , position = self.position()).disparar()
+		new Proyectil(direccion = direccionMirada , position = self.position(), tipoProyectil = "ParteBoss").disparar()
 	}
 
 	method eliminarse() {
