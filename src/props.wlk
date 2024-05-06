@@ -10,24 +10,24 @@ class Invisible {
 	}	
 }
 
-object muroInvisible{
+object muroInvisibleJefe{
 	
 	var contador = 1
 	
-	const property direcciones = []
+	const property posiciones = []
 	
-	method llenarDirecciones(posicionY){
+	method llenarPosiciones(posicionY){
 		if (contador < game.width()-1){
-			direcciones.add(game.at(contador, posicionY))
+			posiciones.add(game.at(contador, posicionY))
 			contador ++
-			self.llenarDirecciones(posicionY)
+			self.llenarPosiciones(posicionY)
 		}
 		
 	}
 	
-	method crearMuroInvisible(posicionY){
-		self.llenarDirecciones(posicionY)
-		direcciones.forEach({posicion => self.crearMuroAt(posicion)})		
+	method crearBarreraAt(posicionY){
+		self.llenarPosiciones(posicionY)
+		posiciones.forEach({posicion => self.crearMuroAt(posicion)})		
 	}
 	
 	method crearMuroAt(posicion) {

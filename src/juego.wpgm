@@ -14,7 +14,7 @@ program juego {
 	game.boardGround("sc_dungeon_boss_1.png")
 	game.addVisual(hero)
 	game.addVisual(jefe)
-	muroInvisible.crearMuroInvisible(game.height()-4)
+	muroInvisibleJefe.crearBarreraAt(game.height()-4)
 	jefe.iniciar()
 	keyboard.w().onPressDo({hero.mover(arriba)})
 	keyboard.d().onPressDo({hero.mover(derecha)})
