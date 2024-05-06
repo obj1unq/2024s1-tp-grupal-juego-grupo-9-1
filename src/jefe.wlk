@@ -17,7 +17,8 @@ object jefe {
 	var aguante = 40
 	var property moviendoA = derecha
 	const partes = []
-	var property velocidad = 500
+	var property velocidadDisparo = 500
+	var property velocidadMovimiento = 500
 	var property cadencia = 4000
 
 	method aguante() {
@@ -34,25 +35,32 @@ object jefe {
 	}
 	
 	method atacar() {
+		// Tanto los proyectiles del jefe y partes tienen atributos parametrizables.
 		new Proyectil(
 			direccion = abajo , 
 			position = self.position(), 
-			tipoProyectil = "Jefe", 
+			tipoProyectil = "Jefe", // Determina la imagen correspondiente al proyectil. Si se suman nuevas, fijarse nombres de archivos
 			danio = 10,
-			velocidad = velocidad
+			velocidad = velocidadDisparo
 		).disparar()
 	}
 
-
 	method subirVelocidadProyectil(modificadorCadencia, modificadorVelocidad){
-		game.removeTickEvent("Ataques Boss")
-		velocidad -= modificadorVelocidad
+		// Incrementa la frecuencia y velocidad de los proyectiles
+		game.removeTickEvent("Ataques Boss")	// Necesario desactivar para cambiar parametros
+		velocidadDisparo -= modificadorVelocidad
 		cadencia -= modificadorCadencia
 		self.activarAtaques()
 	}
 	
 	method activarMovimiento() {
-		game.onTick(500, "Movimiento de boss", {=> self.mover()})
+		game.onTick(velocidadMovimiento, "Movimiento de boss", {=> self.mover()})
+	}
+	
+	method subirVelocidadMovimiento(velocidad){
+		game.removeTickEvent("Movimiento de boss")
+		velocidadMovimiento -= velocidad
+		self.activarMovimiento()
 	}
 
 	method mover() {
@@ -67,7 +75,9 @@ object jefe {
 
 	method separarParte() {
 		// este si se agregan mas bordes que sean con objetos asi no aparece encima una parte
-		self.subirVelocidadProyectil(500, 100)
+		// Cada vez que se separa una parte, se incrementa la velocidad y cadencia de proyectil de boss y partes por igual
+		self.subirVelocidadProyectil(1100, 120)
+		self.subirVelocidadMovimiento(100)
 		const parte = new ParteBoss(position = randomizer.emptyPosition())
 		parte.iniciar()
 		partes.add(parte)
@@ -111,8 +121,10 @@ object jefe {
 	}
 
 
-
+	
 	method serDerrotado() {
+		// TODO Crear un objeto escenario o nivel que maneje todos los eventos del mismo
+		// por ahora lo dejo desde el jefe para mostrar funcionalidades
 		game.removeTickEvent("Ataques Boss")
 		game.removeVisual(self)
 		partes.forEach({ parte => parte.eliminarse()})
@@ -142,7 +154,7 @@ class ParteBoss {
 	method image() {
 		return "Boss_Parte.png"
 	}
-
+	
 	method disparar() {
 		direccionMirada = direcciones.mirandoAlHeroe(self.position())
 		new Proyectil(
@@ -150,7 +162,7 @@ class ParteBoss {
 			position = self.position(), 
 			tipoProyectil = "ParteBoss", 
 			danio = 10,
-			velocidad = jefe.velocidad()
+			velocidad = jefe.velocidadDisparo()
 		).disparar()
 	}
 
