@@ -10,7 +10,7 @@ object hero {
 	var property estado = vivo
 
 	method image() {
-		return "Hero_" + direccion.toString().capitalize() + "_" + estado + ".png"
+		return "Hero_" + direccion.toString().capitalize() + "_" + estado.toString() + ".png"
 	}
 	
 	method text() = hp.toString()
@@ -89,7 +89,7 @@ object ganador{
 	
 	method activar(){
 		game.say(hero, "Victoria! He derrotado al jefazo!")
-		game.schedule(1500, {game.stop()})
+		game.schedule(2500, {game.stop()})
 	}
 	
 }
