@@ -4,6 +4,25 @@ import proyectiles.*
 import randomizer.*
 import hero.*
 
+/*class animado(){
+ * 	var frameActual = 1
+ * 	const frames
+ * method frameActual(){
+ * return frameActual}
+ * 	method animar(){
+ * 		if (frameActual == self.frames()){
+ * 		frameActual == 1}else
+ * 		{frameActual +=1 }}
+ * 	}
+ */
+ 
+ //+ self.frameActual().toString()
+ 
+ /*method accion(){
+	 * 	if (estaElHeroeA(direccion)) ataca(direccion)
+	 * 	else mover(direccion)}
+	 */
+
 class Minion {
 
 	var property position
@@ -49,10 +68,12 @@ class Minion {
 
 }
 
+
 class Manoplas inherits Minion {
 
-	override method image() = "Manoplas_" + super()
+	override method image() = "Manoplas_" + super() 
 
+	
 	override method perseguirAHeroe() {
 		game.onTick(self.velocidadMovimiento(), "Perseguir a heroe" + self.identity(), ({ self.mover()}))
 	}
