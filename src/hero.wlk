@@ -62,6 +62,10 @@ object hero {
 		direccion = abajo
 		estado.activar()
 	}
+	
+	method collision(objeto){}
+	
+	method esAtravesable() = true
 
 }
 

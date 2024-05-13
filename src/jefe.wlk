@@ -9,6 +9,7 @@ import hero.*
  * por eso no tiene colision, tampoco puse metodos de recibir daño pues no se como se diseñaran
  * los ataques del heroe, las partes deberian ser inmunes al daño pues es para aumentar dificultad
  al pasar a "la otra fase"*/
+ 
 object jefe {
 
 	var property cantidadEscudos = 3

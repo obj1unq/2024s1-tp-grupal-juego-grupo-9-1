@@ -3,6 +3,7 @@ import hero.*
 import jefe.*
 import direcciones.*
 import props.*
+import personaje.*
 
 program juego {
 
@@ -13,9 +14,7 @@ program juego {
 	game.height(12)
 	game.boardGround("sc_dungeon_boss_1.png")
 	game.addVisual(hero)
-	game.addVisual(jefe)
 	muroInvisibleJefe.crearBarreraAt(game.height()-4)
-	jefe.iniciar()
 	keyboard.w().onPressDo({hero.mover(arriba)})
 	keyboard.d().onPressDo({hero.mover(derecha)})
 	keyboard.a().onPressDo({hero.mover(izquierda)})
@@ -26,7 +25,8 @@ program juego {
 	keyboard.down().onPressDo({hero.dispararHacia(abajo)})
 	keyboard.o().onPressDo({jefe.recibirDanio(10)}) // Se conserva esto como prueba rapida para derrota jefe
 	keyboard.p().onPressDo({hero.recibirDanio(10)}) // Se conserva esto como prueba rapida de derrota de heroe
-	game.onCollideDo(jefe, { algo => algo.collision(jefe) })
+	//game.onCollideDo(manoplasFactory, { algo => algo.collision(jefe) })
 	game.onCollideDo(hero, { algo => algo.collision(hero) })
+	game.onTick(5000, "Aparecen manoplas", {enemyManager.crearEnemigo(octorok)})
 	game.start() 
 }
