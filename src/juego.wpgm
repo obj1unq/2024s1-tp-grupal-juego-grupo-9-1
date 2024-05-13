@@ -1,21 +1,32 @@
 import wollok.game.*
 import hero.*
 import jefe.*
+import direcciones.*
+import props.*
+import personaje.*
 
 program juego {
-	game.width(15)
-	game.height(12)
-	game.start()
+
 	
-	/*
-	 * estado del game utilizado para testear el boss
+	//  estado del game utilizado para testear el boss
 	game.title("game")
 	game.width(15)
 	game.height(12)
-	game.boardGround("fondo.png")
-	game.addVisualCharacter(hero)
-	game.addVisual(jefe)
-	jefe.iniciar()
-	keyboard.o().onPressDo({jefe.recibirDanio(10)})
-	game.start() */
+	game.boardGround("sc_dungeon_boss_1.png")
+	game.addVisual(hero)
+	muroInvisibleJefe.crearBarreraAt(game.height()-4)
+	keyboard.w().onPressDo({hero.mover(arriba)})
+	keyboard.d().onPressDo({hero.mover(derecha)})
+	keyboard.a().onPressDo({hero.mover(izquierda)})
+	keyboard.s().onPressDo({hero.mover(abajo)})
+	keyboard.left().onPressDo({hero.dispararHacia(izquierda)})
+	keyboard.up().onPressDo({hero.dispararHacia(arriba)})
+	keyboard.right().onPressDo({hero.dispararHacia(derecha)})
+	keyboard.down().onPressDo({hero.dispararHacia(abajo)})
+	keyboard.o().onPressDo({jefe.recibirDanio(10)}) // Se conserva esto como prueba rapida para derrota jefe
+	keyboard.p().onPressDo({hero.recibirDanio(10)}) // Se conserva esto como prueba rapida de derrota de heroe
+	//game.onCollideDo(manoplasFactory, { algo => algo.collision(jefe) })
+	game.onCollideDo(hero, { algo => algo.collision(hero) })
+	game.onTick(5000, "Aparecen manoplas", {enemyManager.crearEnemigo(octorok)})
+	game.start() 
 }

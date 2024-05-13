@@ -4,17 +4,20 @@ import direcciones.*
 /* estos proyectiles no tienen colicion con objetos pues no se como se haran obstaculos si hay 
   ni como sera la vida del heroe, en los assets esta un proyectil parte por si hace falta cambiar el tipo de daño
   y por ende hacer 2 tipos distintos de proyectiles*/
-class ProyectilBoss {
+class Proyectil {
 	var property direccion
 	var property position
+	var property tipoProyectil
+	var property danio
+	var property velocidad
 	
 	method image(){
-		return "Proyectil_Boss.png"
+		return "Proyectil_" + tipoProyectil.toString() + ".png"
 	}
 	method disparar(){
 		self.position(self.direccion().siguiente(self.position()))
 		game.addVisual(self)
-		game.onTick(500,"desplazarProyectil" + self.identity().toString(),{self.desplazar()})
+		game.onTick(velocidad,"desplazarProyectil" + self.identity().toString(),{self.desplazar()})
 	}
 	
 	method desplazar(){
@@ -28,4 +31,11 @@ class ProyectilBoss {
 		game.removeTickEvent("desplazarProyectil" + self.identity().toString())
 		game.removeVisual(self)
 	}
+	
+	method collision(personaje){
+		personaje.recibirDanio(danio)
+		self.desaparecer()
+	}
+	
+	method esAtravesable() = true
 }

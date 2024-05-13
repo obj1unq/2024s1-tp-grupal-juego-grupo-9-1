@@ -91,4 +91,15 @@ object direcciones{
 		return if (position.y() <= (hero.position().y())) arriba
 		else abajo
 	}
+	
+	method puedeIr(desde, direccion) {
+		const aDondeVoy = direccion.siguiente(desde) 
+		return not self.esUnBorde(aDondeVoy) && not self.hayObstaculo(aDondeVoy) 
+	}
+	
+	method hayObstaculo(position) {
+		const visuales = game.getObjectsIn(position)
+		return visuales.any({visual => not visual.esAtravesable()})
+	}
+	
 }
