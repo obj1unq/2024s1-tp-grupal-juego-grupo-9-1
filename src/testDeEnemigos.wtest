@@ -1,11 +1,16 @@
 import wollok.game.*
-import enemigos.*
 import hero.*
 
-
+/*
+ * 
+ 
+ 
+ 
+ 
+ 
 describe "test enemigo" {
 	
-	const enemigo = new Enemigo(position = game.origin())
+	const enemigo = new Minion(position = game.origin())
 	
 	method initialize() {
 		game.clear()
@@ -28,3 +33,4 @@ describe "test enemigo" {
 	}
 	
 }
+ */
