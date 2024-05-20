@@ -1,5 +1,6 @@
 import wollok.game.*
 import hero.*
+import nivel.*
 
 //archivo suplemental de direcciones
 object izquierda {
@@ -94,7 +95,7 @@ object direcciones{
 	
 	method puedeIr(desde, direccion) {
 		const aDondeVoy = direccion.siguiente(desde) 
-		return not self.esUnBorde(aDondeVoy) && not self.hayObstaculo(aDondeVoy) 
+		return escenario.estaDentro(aDondeVoy) && not self.hayObstaculo(aDondeVoy) 
 	}
 	
 	method hayObstaculo(position) {
