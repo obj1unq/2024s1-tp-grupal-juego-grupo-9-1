@@ -6,7 +6,24 @@ import hero.*
 import nivel.*
 
 class Enemigo {
-
+/*class animado(){
+ * 	var frameActual = 1
+ * 	const frames
+ * method frameActual(){
+ * return frameActual}
+ * 	method animar(){
+ * 		if (frameActual == self.frames()){
+ * 		frameActual == 1}else
+ * 		{frameActual +=1 }}
+ * 	}
+ */
+ 
+ //+ self.frameActual().toString()
+ 
+ /*method accion(){
+	 * 	if (estaElHeroeA(direccion)) ataca(direccion)
+	 * 	else mover(direccion)}
+	 */
 	var property position
 	var property direccion
 	var property hp
@@ -55,7 +72,8 @@ class Enemigo {
 
 class Manoplas inherits Enemigo {
 
-	override method image() = "Manoplas_" + super()
+
+	override method image() = "Manoplas_" + super() 
 
 	override method accion() = "Perseguir a heroe"
 

@@ -1,0 +1,30 @@
+import wollok.game.*
+import enemigos.*
+import hero.*
+
+
+describe "test enemigo" {
+	
+	const enemigo = new Enemigo(position = game.origin())
+	
+	method initialize() {
+		game.clear()
+		game.height(5)
+		game.width(5)
+		game.addVisual(hero)
+		game.addVisual(enemigo)
+	}
+
+	test "enemigo se encuentra con hero" {
+		enemigo.mover()
+		assert.equals(game.at(0, 1), enemigo.position())
+		enemigo.mover()
+		assert.equals(game.at(1, 1), enemigo.position())
+		enemigo.mover()
+		assert.equals(game.at(1, 2), enemigo.position())
+		enemigo.mover()
+		assert.equals(game.at(2, 2), enemigo.position())
+		assert.that(enemigo.position() == hero.position())
+	}
+	
+}
