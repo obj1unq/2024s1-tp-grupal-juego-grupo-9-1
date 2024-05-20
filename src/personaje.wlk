@@ -3,8 +3,9 @@ import direcciones.*
 import proyectiles.*
 import randomizer.*
 import hero.*
+import nivel.*
 
-class Minion {
+class Enemigo {
 
 	var property position
 	var property direccion
@@ -12,6 +13,7 @@ class Minion {
 	var property velocidadAtaque = null
 	var property velocidadMovimiento
 	const property danio
+	const property bando = enemigo
 
 	method image() {
 		return direccion.toString().capitalize() + ".png"
@@ -49,7 +51,7 @@ class Minion {
 
 }
 
-class Manoplas inherits Minion {
+class Manoplas inherits personaje.Enemigo {
 
 	override method image() = "Manoplas_" + super()
 
@@ -71,7 +73,7 @@ class Manoplas inherits Minion {
 
 }
 
-class Octorok inherits Minion {
+class Octorok inherits personaje.Enemigo {
 
 	var property moviendoA = [ derecha, arriba ].anyOne()
 
@@ -87,7 +89,7 @@ class Octorok inherits Minion {
 	}
 
 	override method mover() {
-		if (direcciones.esUnBorde(self.position()) || direcciones.hayObstaculo(self.moviendoA().siguiente(self.position()))) {
+		if (not direcciones.puedeIr(self.position(), moviendoA)) {
 			self.girarBicho()
 		}
 		self.direccion(self.moviendoA())
@@ -107,7 +109,8 @@ class Octorok inherits Minion {
 			position = self.position(), 
 			tipoProyectil = "Octorok", // Determina la imagen correspondiente al proyectil. Si se suman nuevas, fijarse nombres de archivos
 			danio = self.danio(),
-			velocidad = self.velocidadAtaque()
+			velocidad = self.velocidadAtaque(),
+			bando = self.bando()
 		).disparar()
 		}
 	}
@@ -141,7 +144,7 @@ object manoplas {
 	}
 
 	method manoplas() {
-		return new Manoplas(position = randomizer.emptyPosition(), direccion = derecha, hp = 10, velocidadMovimiento = 2000, danio = 10)
+		return new Manoplas(position = randomizer.emptyPosition(), direccion = derecha, hp = 10, velocidadMovimiento = 1000, danio = 10)
 	}
 
 }
@@ -159,12 +162,12 @@ object octorok {
 	method octorok() {
 		return new Octorok(position = randomizer.emptyPosition(), direccion = derecha, hp = 10, velocidadMovimiento = 1000, velocidadAtaque = 1000, danio = 10)
 	}
-
 }
 
 object enemyManager {
 
 	const property enemigos = []
+	const property enemigosDerrotados = []
 
 	method crearEnemigo(enemigo) {
 		if (enemigos.size() < 5) {
@@ -175,7 +178,21 @@ object enemyManager {
 	method enemyDerrotado(enemigo) {
 		game.removeVisual(enemigo)
 		enemigos.remove(enemigo)
+		enemigosDerrotados.add(enemigo)
+		self.chequearVictoria()
+	}
+	
+	method chequearVictoria(){
+		if(enemigosDerrotados.size() == escenario.nivel().totalEnemigos()){
+			escenario.nivelCompletado()
+		}
+	}
+	
+	method resetearContador(){
+		enemigosDerrotados.clear()
 	}
 
 }
+
+object enemigo{}
 

@@ -4,10 +4,11 @@ import direcciones.*
 
 object hero {
 
-	var property position = game.center()
+	var property position = game.at(1,1)
 	var property direccion = abajo
 	var property hp = 50
 	var property estado = vivo
+	const property bando = self
 
 	method image() {
 		return "Hero_" + direccion.toString().capitalize() + "_" + estado.toString() + ".png"
@@ -21,7 +22,8 @@ object hero {
 			position = self.position(), 
 			tipoProyectil = self.toString() + "_" + _direccion.toString(), 
 			danio = 10,
-			velocidad = 300
+			velocidad = 300,
+			bando = self
 		).disparar()
 	}
 
@@ -93,7 +95,5 @@ object ganador{
 	
 	method activar(){
 		game.say(hero, "Victoria! He derrotado al jefazo!")
-		game.schedule(2500, {game.stop()})
-	}
-	
+	}	
 }

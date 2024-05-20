@@ -1,5 +1,6 @@
 import wollok.game.*
 import direcciones.*
+import nivel.*
 
 /* estos proyectiles no tienen colicion con objetos pues no se como se haran obstaculos si hay 
   ni como sera la vida del heroe, en los assets esta un proyectil parte por si hace falta cambiar el tipo de daño
@@ -10,6 +11,7 @@ class Proyectil {
 	var property tipoProyectil
 	var property danio
 	var property velocidad
+	var property bando
 	
 	method image(){
 		return "Proyectil_" + tipoProyectil.toString() + ".png"
@@ -21,7 +23,8 @@ class Proyectil {
 	}
 	
 	method desplazar(){
-		if (direcciones.esUnBorde(self.position())){
+		if (not escenario.estaDentro(self.position()))
+		{
 			self.desaparecer()
 		}
 		else{
@@ -32,10 +35,13 @@ class Proyectil {
 		game.removeVisual(self)
 	}
 	
-	method collision(personaje){
-		personaje.recibirDanio(danio)
-		self.desaparecer()
+	method collision(cosa){
+		if(cosa.bando() != self.bando()){
+			cosa.recibirDanio(danio)
+			self.desaparecer()			
+		}
 	}
+
 	
 	method esAtravesable() = true
 }

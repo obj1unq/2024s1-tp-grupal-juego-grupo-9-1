@@ -3,6 +3,7 @@ import proyectiles.*
 import randomizer.*
 import direcciones.*
 import hero.*
+import personaje.*
 
 /*comentarios : se supone que donde este el jefe no sea una zona que pueda atravezar el heroe, pues como ataca
  * hacia abajo solo, que no se pueda que el jugador se ponga al lado y ataque sin peligro
@@ -21,6 +22,8 @@ object jefe {
 	var property velocidadDisparo = 500
 	var property velocidadMovimiento = 500
 	var property cadencia = 4000
+	
+	method bando() = enemigo
 
 	method aguante() {
 		return aguante
@@ -42,7 +45,8 @@ object jefe {
 			position = self.position(), 
 			tipoProyectil = "Jefe", // Determina la imagen correspondiente al proyectil. Si se suman nuevas, fijarse nombres de archivos
 			danio = 10,
-			velocidad = velocidadDisparo
+			velocidad = velocidadDisparo,
+			bando = self.bando()
 		).disparar()
 	}
 
@@ -79,7 +83,7 @@ object jefe {
 		// Cada vez que se separa una parte, se incrementa la velocidad y cadencia de proyectil de boss y partes por igual
 		self.subirVelocidadProyectil(1100, 120)
 		self.subirVelocidadMovimiento(100)
-		const parte = new ParteBoss(position = randomizer.emptyPosition())
+		const parte = new ParteBoss()
 		parte.iniciar()
 		partes.add(parte)
 	}
@@ -124,24 +128,30 @@ object jefe {
 
 	
 	method serDerrotado() {
-		// TODO Crear un objeto escenario o nivel que maneje todos los eventos del mismo
-		// por ahora lo dejo desde el jefe para mostrar funcionalidades
-		game.removeTickEvent("Ataques Boss")
-		game.removeVisual(self)
 		partes.forEach({ parte => parte.eliminarse()})
-		hero.victoria()
+		game.removeTickEvent("Ataques Boss")
+		enemyManager.enemyDerrotado(self)
 	}
 	
 	method esAtravesable() {
 		return false
 	}
 
+	method crearNuevo() {
+		game.addVisual(self)
+		self.iniciar()
+		game.onCollideDo(self, { algo => algo.collision(self)})
+		return self
+	}
 }
 
 class ParteBoss {
 
 	var property direccionMirada = direcciones.mirandoAlHeroe(self.position())
-	var property position
+	var property position = game.at((1..13).anyOne(), (1..9).anyOne())
+	
+	
+	method bando() = enemigo
 
 	method iniciar() {
 		game.addVisual(self)
@@ -152,9 +162,7 @@ class ParteBoss {
 		return false
 	}
 
-	method image() {
-		return "Boss_Parte.png"
-	}
+	method image() = "Boss_Parte.png"
 	
 	method disparar() {
 		direccionMirada = direcciones.mirandoAlHeroe(self.position())
@@ -163,7 +171,8 @@ class ParteBoss {
 			position = self.position(), 
 			tipoProyectil = "ParteBoss", 
 			danio = 10,
-			velocidad = jefe.velocidadDisparo()
+			velocidad = jefe.velocidadDisparo(),
+			bando = self
 		).disparar()
 	}
 
