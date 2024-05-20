@@ -1,20 +1,23 @@
 import wollok.game.*
 import proyectiles.*
 import direcciones.*
+import interfaz.*
+
 
 object hero {
 
 	var property position = game.at(1,1)
 	var property direccion = abajo
-	var property hp = 50
+	var property hp = managerVidaHeroe
 	var property estado = vivo
 	const property bando = self
 
 	method image() {
 		return "Hero_" + direccion.toString().capitalize() + "_" + estado.toString() + ".png"
 	}
-	
-	method text() = hp.toString()
+	method hp(){
+		return hp
+	}
 
 	method dispararHacia(_direccion) {
 		new Proyectil(
@@ -45,13 +48,9 @@ object hero {
 	}
 	
 	method recibirDanio(cantidad){
-		if(hp > 1){
-			hp -= cantidad.max(0)
-		}
-		else{
-			self.derrotado()
-		}
+			hp.reducirVida(cantidad)
 	}
+
 	
 	method derrotado(){
 		estado = derrotado
