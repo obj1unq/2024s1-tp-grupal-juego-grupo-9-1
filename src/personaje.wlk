@@ -19,13 +19,14 @@ class Enemigo {
 		return direccion.toString().capitalize() + ".png"
 	}
 
-	method iniciar() {
-		self.perseguirAHeroe()
+	method iniciar(){
+		game.onTick(self.velocidadMovimiento(), self.accion() + + self.identity(), {self.activar()})
 	}
-
-	method perseguirAHeroe()
+	method accion()
 
 	method mover()
+	
+	method activar(){self.mover()}
 
 	method recibirDanio(_danio) {
 		hp -= _danio
@@ -37,6 +38,7 @@ class Enemigo {
 	}
 
 	method enemyDerrotado() {
+		game.removeTickEvent(self.accion() + self.identity())
 		enemyManager.enemyDerrotado(self)
 	}
 
@@ -51,13 +53,11 @@ class Enemigo {
 
 }
 
-class Manoplas inherits personaje.Enemigo {
+class Manoplas inherits Enemigo {
 
 	override method image() = "Manoplas_" + super()
 
-	override method perseguirAHeroe() {
-		game.onTick(self.velocidadMovimiento(), "Perseguir a heroe" + self.identity(), ({ self.mover()}))
-	}
+	override method accion() = "Perseguir a heroe"
 
 	override method mover() {
 		self.direccion(direcciones.mirandoAlHeroe(self.position()))
@@ -66,25 +66,18 @@ class Manoplas inherits personaje.Enemigo {
 		}
 	}
 
-	override method enemyDerrotado() {
-		game.removeTickEvent("Perseguir a heroe" + self.identity())
-		super()
-	}
-
 }
 
-class Octorok inherits personaje.Enemigo {
+class Octorok inherits Enemigo {
 
 	var property moviendoA = [ derecha, arriba ].anyOne()
 
 	override method image() = "Octorok_" + super()
 
-	override method perseguirAHeroe() {
-		game.onTick(self.velocidadMovimiento(), "encontrar y atacar" + self.identity(), ({ self.moverYDisparar()}))
-	}
+	override method accion() = "Encontrar y atacar"
 
-	method moverYDisparar() {
-		self.mover()
+	override method activar() {
+		super()
 		self.disparar()
 	}
 
@@ -119,13 +112,8 @@ class Octorok inherits personaje.Enemigo {
 		return self.position().x() == hero.position().x() or self.position().y() == hero.position().y()
 	}
 
-	override method enemyDerrotado() {
-		game.removeTickEvent("encontrar y atacar" + self.identity())
-		super()
-	}
-
 	override method collision(personaje) {
-		if (personaje == hero) {
+		if (personaje.bando() != self.bando()) {
 			personaje.recibirDanio(self.danioPorContacto())
 			self.enemyDerrotado()
 		}

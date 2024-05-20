@@ -9,24 +9,10 @@ import nivel.*
 program juego {
 
 	
-	//  estado del game utilizado para testear el boss
-
-	
+	game.title("game")
+	game.width(15)
+	game.height(12)	
 	escenario.init()
 
-	//muroInvisibleJefe.crearBarreraAt(game.height()-4)
-//	keyboard.w().onPressDo({hero.mover(arriba)})
-//	keyboard.d().onPressDo({hero.mover(derecha)})
-//	keyboard.a().onPressDo({hero.mover(izquierda)})
-//	keyboard.s().onPressDo({hero.mover(abajo)})
-//	keyboard.left().onPressDo({hero.dispararHacia(izquierda)})
-//	keyboard.up().odssDo({hero.dispararHacia(arriba)})
-//	keyboard.right().onPressDo({hero.dispararHacia(derecha)})
-//	keyboard.down().onPressDo({hero.dispararHacia(abajo)})
-//	keyboard.o().onPressDo({jefe.recibirDanio(10)}) // Se conserva esto como prueba rapida para derrota jefe
-//	keyboard.p().onPressDo({hero.recibirDanio(10)}) // Se conserva esto como prueba rapida de derrota de heroe
-//	//game.onCollideDo(manoplasFactory, { algo => algo.collision(jefe) })
-	
-	//game.onTick(5000, "Aparecen manoplas", {enemyManager.crearEnemigo(octorok)})
 	game.start() 
 }

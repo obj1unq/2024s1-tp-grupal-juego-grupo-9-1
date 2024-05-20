@@ -9,7 +9,7 @@ object randomizer {
 		return (1..game.width() -1).anyOne()
 	}
 	method randomY(){
-		return (0..game.height() -1).anyOne()
+		return (1..game.height() -1).anyOne()
 	}
 	method randomPosition(){
 		return game.at(self.randomX(),self.randomY())

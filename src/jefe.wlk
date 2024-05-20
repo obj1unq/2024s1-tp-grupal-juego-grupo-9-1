@@ -11,25 +11,21 @@ import personaje.*
  * los ataques del heroe, las partes deberian ser inmunes al daño pues es para aumentar dificultad
  al pasar a "la otra fase"*/
  
-object jefe {
+object jefe inherits Enemigo (danio = 10, position = game.at(7,9), direccion = derecha, hp = 40, velocidadAtaque = 500, velocidadMovimiento = 500) {
 
 	var property cantidadEscudos = 3
-	var property position = game.at(7, 9)
+	//var property position = game.at(7, 9)
 	var aguanteEscudo = 90
 	var aguante = 40
 	var property moviendoA = derecha
 	const partes = []
-	var property velocidadDisparo = 500
-	var property velocidadMovimiento = 500
 	var property cadencia = 4000
 	
-	method bando() = enemigo
-
 	method aguante() {
 		return aguante
 	}
 
-	method iniciar() {
+	override method iniciar() {
 		self.activarMovimiento()
 		self.activarAtaques()
 	}
@@ -45,7 +41,7 @@ object jefe {
 			position = self.position(), 
 			tipoProyectil = "Jefe", // Determina la imagen correspondiente al proyectil. Si se suman nuevas, fijarse nombres de archivos
 			danio = 10,
-			velocidad = velocidadDisparo,
+			velocidad = self.velocidadAtaque(),
 			bando = self.bando()
 		).disparar()
 	}
@@ -53,7 +49,7 @@ object jefe {
 	method subirVelocidadProyectil(modificadorCadencia, modificadorVelocidad){
 		// Incrementa la frecuencia y velocidad de los proyectiles
 		game.removeTickEvent("Ataques Boss")	// Necesario desactivar para cambiar parametros
-		velocidadDisparo -= modificadorVelocidad
+		self.velocidadAtaque(self.velocidadAtaque()- modificadorVelocidad) 
 		cadencia -= modificadorCadencia
 		self.activarAtaques()
 	}
@@ -68,7 +64,7 @@ object jefe {
 		self.activarMovimiento()
 	}
 
-	method mover() {
+	override method mover() {
 		// este metodo supone toda la ventana como posible movimiento
 		if (direcciones.esUnBorde(moviendoA.siguiente(position) )) {
 			self.moviendoA((self.moviendoA().opuesto()))
@@ -83,7 +79,7 @@ object jefe {
 		// Cada vez que se separa una parte, se incrementa la velocidad y cadencia de proyectil de boss y partes por igual
 		self.subirVelocidadProyectil(1100, 120)
 		self.subirVelocidadMovimiento(100)
-		const parte = new ParteBoss()
+		const parte = new ParteBoss(position = randomizer.emptyPosition())
 		parte.iniciar()
 		partes.add(parte)
 	}
@@ -92,7 +88,7 @@ object jefe {
 		return if (self.cantidadEscudos() > 0) self.cantidadEscudos().toString() else "Vulnerable"
 	}
 
-	method image() {
+	override method image() {
 		return "boss_" + self.escudos() + ".png"
 	}
 
@@ -104,7 +100,7 @@ object jefe {
 		return aguanteEscudo
 	}
 
-	method recibirDanio(cantidad) {
+	override method recibirDanio(cantidad) {
 		if (self.aguanteEscudo() > 0) {
 			aguanteEscudo = (aguanteEscudo - cantidad).max(0)
 			self.comprobarCantidadEscudos()
@@ -133,7 +129,7 @@ object jefe {
 		enemyManager.enemyDerrotado(self)
 	}
 	
-	method esAtravesable() {
+	override method esAtravesable() {
 		return false
 	}
 
@@ -148,7 +144,7 @@ object jefe {
 class ParteBoss {
 
 	var property direccionMirada = direcciones.mirandoAlHeroe(self.position())
-	var property position = game.at((1..13).anyOne(), (1..9).anyOne())
+	var property position
 	
 	
 	method bando() = enemigo
@@ -171,7 +167,7 @@ class ParteBoss {
 			position = self.position(), 
 			tipoProyectil = "ParteBoss", 
 			danio = 10,
-			velocidad = jefe.velocidadDisparo(),
+			velocidad = jefe.velocidadAtaque(),
 			bando = self
 		).disparar()
 	}

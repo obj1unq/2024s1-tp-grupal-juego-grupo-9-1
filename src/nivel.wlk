@@ -4,6 +4,7 @@ import direcciones.*
 import personaje.*
 import jefe.*
 import props.*
+import randomizer.*
 
 class Nivel {
 
@@ -18,6 +19,7 @@ class Nivel {
 	}
 
 	method position() = game.origin()
+	
 	method enemigo()
 }
 
@@ -37,9 +39,9 @@ class Cuadrante {
 object escenario {
 	
 	const property niveles = [nivel1,nivel2,nivel3]
-	var nivelActual = 2
+	var nivelActual = 3
 	
-	method nivel() = niveles.get(nivelActual)
+	method nivel() = niveles.get(nivelActual-1)
 	
 		method estaDentro(position) {
 			return self.nivel().bordesEscenario().any({ cuadrante => cuadrante.estaDentro(position) })
@@ -47,11 +49,12 @@ object escenario {
 	
 	method pasarDeNivel(){
 		enemyManager.resetearContador()
-		if (nivelActual <2){
+		if (nivelActual < niveles.size()){
 			game.removeVisual(self.nivel())
 			nivelActual ++
 			game.clear()
 			hero.estado(vivo)
+			hero.position(randomizer.emptyPosition())
 			self.init()		
 		} else{
 			game.say(hero, "Juego completado! Felicitaciones!")
@@ -60,9 +63,7 @@ object escenario {
 	}
 	
 	method init(){
-		game.title("game")
-		game.width(15)
-		game.height(12)
+
 		game.addVisual(self.nivel())
 		game.addVisual(hero)
 		
@@ -105,7 +106,7 @@ object nivel2 inherits Nivel {
 			
 			override method totalEnemigos() = 1
 						
-			override method bordesEscenario() = [cuadranteFactory.nuevo(1,7,1,4) , cuadranteFactory.nuevo(7,13,1,8)]
+			override method bordesEscenario() = [cuadranteFactory.nuevo(1,7,1,5) , cuadranteFactory.nuevo(8,13,1,8)]
 			
 			override method enemigo() = [manoplas, octorok].anyOne()
 			
@@ -117,7 +118,7 @@ object nivel3 inherits Nivel {
 		
 			override method totalEnemigos() = 1
 						
-			override method bordesEscenario() = [cuadranteFactory.nuevo(1, game.width()-2, 1, game.height()-1)]
+			override method bordesEscenario() = [cuadranteFactory.nuevo(1, game.width()-2, 1, game.height()-4)]
 			
 			override method enemigo() = jefe
 			
