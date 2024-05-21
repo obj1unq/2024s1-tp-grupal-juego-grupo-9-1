@@ -14,7 +14,6 @@ import personaje.*
 object jefe inherits Enemigo (danio = 10, position = game.at(7,9), direccion = derecha, hp = 40, velocidadAtaque = 500, velocidadMovimiento = 500) {
 
 	var property cantidadEscudos = 3
-	//var property position = game.at(7, 9)
 	var aguanteEscudo = 90
 	var aguante = 40
 	var property moviendoA = derecha
@@ -29,6 +28,11 @@ object jefe inherits Enemigo (danio = 10, position = game.at(7,9), direccion = d
 		self.activarMovimiento()
 		self.activarAtaques()
 	}
+	
+	method activarMovimiento() {
+		game.onTick(velocidadMovimiento, "Movimiento de boss", {=> self.mover()})
+	}
+	override method accion() = "Ataques Boss"
 
 	method activarAtaques() {
 		game.onTick(cadencia, "Ataques Boss", { self.atacar()})
@@ -54,13 +58,10 @@ object jefe inherits Enemigo (danio = 10, position = game.at(7,9), direccion = d
 		self.activarAtaques()
 	}
 	
-	method activarMovimiento() {
-		game.onTick(velocidadMovimiento, "Movimiento de boss", {=> self.mover()})
-	}
 	
 	method subirVelocidadMovimiento(velocidad){
 		game.removeTickEvent("Movimiento de boss")
-		velocidadMovimiento -= velocidad
+		self.velocidadMovimiento(self.velocidadMovimiento() - velocidad)
 		self.activarMovimiento()
 	}
 

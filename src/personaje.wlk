@@ -37,7 +37,7 @@ class Enemigo {
 	}
 
 	method iniciar(){
-		game.onTick(self.velocidadMovimiento(), self.accion() + + self.identity(), {self.activar()})
+		game.onTick(self.velocidadMovimiento(), self.accion() + self.identity(), {self.activar()})
 	}
 	method accion()
 
