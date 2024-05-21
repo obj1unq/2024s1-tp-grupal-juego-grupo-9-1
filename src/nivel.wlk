@@ -5,6 +5,7 @@ import personaje.*
 import jefe.*
 import props.*
 import randomizer.*
+import interfaz.*
 
 class Nivel {
 
@@ -66,6 +67,7 @@ object escenario {
 
 		game.addVisual(self.nivel())
 		game.addVisual(hero)
+		managerVidaHeroe.iniciar()
 		
 		// ACCIONES DE HERO
 		keyboard.w().onPressDo({hero.mover(arriba)})
