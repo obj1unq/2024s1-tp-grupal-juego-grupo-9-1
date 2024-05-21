@@ -38,6 +38,7 @@ class Enemigo {
 	method image() {
 		return direccion.toString().capitalize() + ".png"
 	}
+	//
 
 	method iniciar(){
 		game.onTick(self.velocidadMovimiento(), self.accion(), {self.activar()})
