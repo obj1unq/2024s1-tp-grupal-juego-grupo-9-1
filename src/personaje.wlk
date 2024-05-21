@@ -30,7 +30,10 @@ class Enemigo {
 	var property velocidadAtaque = null
 	var property velocidadMovimiento
 	const property danio
-	const property bando = enemigo
+	
+	method bando(){
+		return enemigo
+	}
 
 	method image() {
 		return direccion.toString().capitalize() + ".png"
@@ -142,14 +145,6 @@ class Octorok inherits Enemigo {
 object manoplas {
 
 	method crearNuevo() {
-		const manoplas = self.manoplas()
-		game.addVisual(manoplas)
-		manoplas.iniciar()
-		game.onCollideDo(manoplas, { algo => algo.collision(manoplas)})
-		return manoplas
-	}
-
-	method manoplas() {
 		return new Manoplas(position = randomizer.emptyPosition(), direccion = derecha, hp = 10, velocidadMovimiento = 1000, danio = 10)
 	}
 
@@ -158,14 +153,6 @@ object manoplas {
 object octorok {
 
 	method crearNuevo() {
-		const octorok = self.octorok()
-		game.addVisual(octorok)
-		octorok.iniciar()
-		game.onCollideDo(octorok, { algo => algo.collision(octorok)})
-		return octorok
-	}
-
-	method octorok() {
 		return new Octorok(position = randomizer.emptyPosition(), direccion = derecha, hp = 10, velocidadMovimiento = 1000, velocidadAtaque = 1000, danio = 10)
 	}
 }
@@ -177,7 +164,10 @@ object enemyManager {
 
 	method crearEnemigo(enemigo) {
 		if (enemigos.size() < 5) {
-			enemigos.add(enemigo.crearNuevo())
+			const enemigoGenerado = enemigo.crearNuevo()
+			game.addVisual(enemigoGenerado)
+			enemigoGenerado.iniciar()
+			game.onCollideDo(enemigoGenerado, { algo => algo.collision(enemigoGenerado)})
 		}
 	}
 
