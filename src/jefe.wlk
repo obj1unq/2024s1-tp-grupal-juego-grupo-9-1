@@ -124,9 +124,6 @@ object jefe inherits Enemigo (danio = 10, position = game.at(7,9), direccion = d
 	}
 
 	method crearNuevo() {
-		game.addVisual(self)
-		self.iniciar()
-		game.onCollideDo(self, { algo => algo.collision(self)})
 		return self
 	}
 }
