@@ -40,7 +40,7 @@ class Cuadrante {
 object escenario {
 	
 	const property niveles = [nivel1,nivel2,nivel3]
-	var nivelActual = 3
+	var nivelActual = 1
 	
 	method nivel() = niveles.get(nivelActual-1)
 	

@@ -15,14 +15,10 @@ object jefe inherits Enemigo (danio = 10, position = game.at(7,9), direccion = d
 
 	var property cantidadEscudos = 3
 	var aguanteEscudo = 90
-	var aguante = 40
 	var property moviendoA = derecha
 	const partes = []
 	var property cadencia = 4000
-	
-	method aguante() {
-		return aguante
-	}
+
 
 	override method iniciar() {
 		self.activarMovimiento()
@@ -30,12 +26,12 @@ object jefe inherits Enemigo (danio = 10, position = game.at(7,9), direccion = d
 	}
 	
 	method activarMovimiento() {
-		game.onTick(velocidadMovimiento, "Movimiento de boss", {=> self.mover()})
+		game.onTick(self.velocidadMovimiento(), "Movimiento de boss", {self.mover()})
 	}
 	override method accion() = "Ataques Boss"
 
 	method activarAtaques() {
-		game.onTick(cadencia, "Ataques Boss", { self.atacar()})
+		game.onTick(cadencia, self.accion(), { self.atacar()})
 	}
 	
 	method atacar() {
@@ -67,7 +63,7 @@ object jefe inherits Enemigo (danio = 10, position = game.at(7,9), direccion = d
 
 	override method mover() {
 		// este metodo supone toda la ventana como posible movimiento
-		if (direcciones.esUnBorde(moviendoA.siguiente(position) )) {
+		if (direcciones.esUnBorde(moviendoA.siguiente(self.position()) )) {
 			self.moviendoA((self.moviendoA().opuesto()))
 			self.position(self.moviendoA().siguiente(self.position()))
 		} else {
@@ -106,8 +102,8 @@ object jefe inherits Enemigo (danio = 10, position = game.at(7,9), direccion = d
 			aguanteEscudo = (aguanteEscudo - cantidad).max(0)
 			self.comprobarCantidadEscudos()
 		} else {
-			aguante = (aguante - cantidad).max(0)
-			self.comprobarAguante()
+			self.hp((self.hp() - cantidad).max(0))
+			self.comprobarHp()
 		}
 	}
 
@@ -117,17 +113,10 @@ object jefe inherits Enemigo (danio = 10, position = game.at(7,9), direccion = d
 			self.separarParte()
 		}
 	}
-
-	method comprobarAguante() {
-		if (aguante == 0) self.serDerrotado()
-	}
-
-
 	
-	method serDerrotado() {
+	override method enemyDerrotado() {
 		partes.forEach({ parte => parte.eliminarse()})
-		game.removeTickEvent("Ataques Boss")
-		enemyManager.enemyDerrotado(self)
+		super()
 	}
 	
 	override method esAtravesable() {
@@ -169,7 +158,7 @@ class ParteBoss {
 			tipoProyectil = "ParteBoss", 
 			danio = 10,
 			velocidad = jefe.velocidadAtaque(),
-			bando = self
+			bando = self.bando()
 		).disparar()
 	}
 

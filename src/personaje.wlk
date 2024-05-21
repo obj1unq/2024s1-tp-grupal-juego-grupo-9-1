@@ -37,7 +37,7 @@ class Enemigo {
 	}
 
 	method iniciar(){
-		game.onTick(self.velocidadMovimiento(), self.accion() + self.identity(), {self.activar()})
+		game.onTick(self.velocidadMovimiento(), self.accion(), {self.activar()})
 	}
 	method accion()
 
@@ -55,7 +55,7 @@ class Enemigo {
 	}
 
 	method enemyDerrotado() {
-		game.removeTickEvent(self.accion() + self.identity())
+		game.removeTickEvent(self.accion())
 		enemyManager.enemyDerrotado(self)
 	}
 
@@ -75,7 +75,7 @@ class Manoplas inherits Enemigo {
 
 	override method image() = "Manoplas_" + super() 
 
-	override method accion() = "Perseguir a heroe"
+	override method accion() = "Perseguir a heroe" + self.identity()
 
 	override method mover() {
 		self.direccion(direcciones.mirandoAlHeroe(self.position()))
@@ -92,7 +92,7 @@ class Octorok inherits Enemigo {
 
 	override method image() = "Octorok_" + super()
 
-	override method accion() = "Encontrar y atacar"
+	override method accion() = "Encontrar y atacar" + self.identity()
 
 	override method activar() {
 		super()
