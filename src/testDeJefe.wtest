@@ -3,6 +3,7 @@ import jefe.*
 import proyectiles.*
 import direcciones.*
 import hero.*
+import personaje.*
 
 describe "a jefe y sucedaneos" {
 	
@@ -20,9 +21,9 @@ describe "a jefe y sucedaneos" {
 		assert.equals(game.at(8,10),jefe.position())
 	}
 	test "test de movimiento en borde derecho jefe" {
-		jefe.position(game.at(14,10))
+		jefe.position(game.at(13,10))
 		jefe.mover()
-		assert.equals(game.at(13,10),jefe.position())
+		assert.equals(game.at(12,10),jefe.position())
 	}
 	test "test de movimiento hacia izquierda jefe"{
 		jefe.moviendoA(izquierda)
@@ -31,34 +32,34 @@ describe "a jefe y sucedaneos" {
 	}
 	test "test de movimiento en borde izquierdo jefe" {
 		jefe.moviendoA(izquierda)
-		jefe.position(game.at(0,10))
+		jefe.position(game.at(1,10))
 		jefe.mover()
-		assert.equals(game.at(1,10),jefe.position())
+		assert.equals(game.at(2,10),jefe.position())
 	}
-//	test "proyectil jefe"{
-//		const proyectilDeTest = new Proyectil (direccion = abajo , position = game.at(7,10), tipoProyectil = "jefe", danio = 10, velocidad = velocidad)
-//		proyectilDeTest.disparar()
-//		assert.equals(game.at(7,9),proyectilDeTest.position())
-//		proyectilDeTest.desplazar()
-//		assert.equals(game.at(7,8),proyectilDeTest.position())
-//	}
+	test "proyectil jefe"{
+		const proyectilDeTest = new Proyectil (direccion = abajo , position = game.at(7,10), tipoProyectil = "Jefe", danio = 10, velocidad = 4000, bando = enemigo)
+		proyectilDeTest.disparar()
+		assert.equals(game.at(7,9),proyectilDeTest.position())
+		proyectilDeTest.desplazar()
+		assert.equals(game.at(7,8),proyectilDeTest.position())
+	}
 //	test "aguante y escudos jefe"{
 //		jefe.recibirDanio(29)
 //		assert.equals(3,jefe.cantidadEscudos())
-//		assert.equals(40,jefe.aguante())
+//		assert.equals(40,jefe.hp())
 //		jefe.recibirDanio(1)
 //		assert.equals(2,jefe.cantidadEscudos())
-//		assert.equals(40,jefe.aguante())
+//		assert.equals(40,jefe.hp())
 //		jefe.recibirDanio(30)
 //		assert.equals(1,jefe.cantidadEscudos())
-//		assert.equals(40,jefe.aguante())
+//		assert.equals(40,jefe.hp())
 //		jefe.recibirDanio(30)
 //		assert.equals(0,jefe.cantidadEscudos())
-//		assert.equals(40,jefe.aguante())
+//		assert.equals(40,jefe.hp())
 //		assert.equals("Vulnerable",jefe.escudos())
 //		jefe.recibirDanio(20)
 //		assert.equals(0,jefe.cantidadEscudos())
-//		assert.equals(20,jefe.aguante())
+//		assert.equals(20,jefe.hp())
 //		assert.equals("Vulnerable",jefe.escudos())
 //	}
 	test "parte de boss"{
