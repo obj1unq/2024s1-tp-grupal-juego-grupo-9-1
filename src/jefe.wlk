@@ -11,7 +11,7 @@ import personaje.*
  * los ataques del heroe, las partes deberian ser inmunes al daño pues es para aumentar dificultad
  al pasar a "la otra fase"*/
  
-object jefe inherits Enemigo (danio = 10, position = game.at(7,9), direccion = derecha, hp = 40, velocidadAtaque = 500, velocidadMovimiento = 500) {
+object jefe inherits Enemigo (danio = 10, position = game.at(7,9), direccion = derecha, hp = 40, velocidadAtaque = 500, velocidadMovimiento = 500,frames = 5) {
 
 	var property cantidadEscudos = 3
 	var aguanteEscudo = 90
@@ -79,6 +79,7 @@ object jefe inherits Enemigo (danio = 10, position = game.at(7,9), direccion = d
 		const parte = new ParteBoss(position = randomizer.emptyPosition())
 		parte.iniciar()
 		partes.add(parte)
+		managerAnimados.aniadirPersonajeAnimado(parte)
 	}
 
 	method escudos() {
@@ -86,7 +87,7 @@ object jefe inherits Enemigo (danio = 10, position = game.at(7,9), direccion = d
 	}
 
 	override method image() {
-		return "boss_" + self.escudos() + ".png"
+		return "boss_" + self.escudos() + "_" + self.frameActual() + ".png"
 	}
 
 	method removerEscudo() {
@@ -128,7 +129,7 @@ object jefe inherits Enemigo (danio = 10, position = game.at(7,9), direccion = d
 	}
 }
 
-class ParteBoss {
+class ParteBoss inherits Animado (frames = 5){
 
 	var property direccionMirada = direcciones.mirandoAlHeroe(self.position())
 	var property position
@@ -145,7 +146,7 @@ class ParteBoss {
 		return false
 	}
 
-	method image() = "Boss_Parte.png"
+	method image() = "Boss_Parte_"+ self.frameActual() + ".png"
 	
 	method disparar() {
 		direccionMirada = direcciones.mirandoAlHeroe(self.position())
@@ -160,6 +161,7 @@ class ParteBoss {
 	}
 
 	method eliminarse() {
+		managerAnimados.removerPersonajeAnimado(self)
 		game.removeTickEvent("DispararParte" + self.identity().toString())
 		game.removeVisual(self)
 	}

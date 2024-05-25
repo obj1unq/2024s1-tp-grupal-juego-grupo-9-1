@@ -16,9 +16,12 @@ class Nivel {
 	method totalEnemigos()
 	
 	method iniciar(){
+		self.iniciarAnimaciones()
 		game.onTick(5000, "Aparece enemigo", {enemyManager.crearEnemigo(self.enemigo())})
 	}
-
+	method iniciarAnimaciones(){
+		game.onTick(350, "Animar personajes", {managerAnimados.animarPersonajes()})
+	}
 	method position() = game.origin()
 	
 	method enemigo()
@@ -126,6 +129,7 @@ object nivel3 inherits Nivel {
 			
 			override method iniciar(){
 				muroInvisibleJefe.crearBarreraAt(game.height()-4)
+				self.iniciarAnimaciones()
 				game.schedule(1000, {enemyManager.crearEnemigo(self.enemigo())})
 			}
 			
