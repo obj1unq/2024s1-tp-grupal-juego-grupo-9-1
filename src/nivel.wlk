@@ -16,9 +16,12 @@ class Nivel {
 	method totalEnemigos()
 	
 	method iniciar(){
+		self.iniciarAnimaciones()
 		game.onTick(5000, "Aparece enemigo", {enemyManager.crearEnemigo(self.enemigo())})
 	}
-
+	method iniciarAnimaciones(){
+		game.onTick(350, "Animar personajes", {managerAnimados.animarPersonajes()})
+	}
 	method position() = game.origin()
 	
 	method enemigo()
@@ -49,6 +52,7 @@ object escenario {
 	}
 	
 	method pasarDeNivel(){
+		const corazonesHeroe = hero.hp().corazones()
 		enemyManager.resetearContador()
 		if (nivelActual < niveles.size()){
 			game.removeVisual(self.nivel())
@@ -56,6 +60,7 @@ object escenario {
 			game.clear()
 			hero.estado(vivo)
 			hero.position(randomizer.emptyPosition())
+			hero.hp().corazones(corazonesHeroe)
 			self.init()		
 		} else{
 			game.say(hero, "Juego completado! Felicitaciones!")
@@ -67,7 +72,7 @@ object escenario {
 
 		game.addVisual(self.nivel())
 		game.addVisual(hero)
-		managerVidaHeroe.iniciar()
+		hero.hp().iniciar()
 		
 		// ACCIONES DE HERO
 		keyboard.w().onPressDo({hero.mover(arriba)})
@@ -126,6 +131,7 @@ object nivel3 inherits Nivel {
 			
 			override method iniciar(){
 				muroInvisibleJefe.crearBarreraAt(game.height()-4)
+				self.iniciarAnimaciones()
 				game.schedule(1000, {enemyManager.crearEnemigo(self.enemigo())})
 			}
 			

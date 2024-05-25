@@ -5,19 +5,40 @@ import randomizer.*
 import hero.*
 import nivel.*
 
-class Enemigo {
-/*class animado(){
- * 	var frameActual = 1
- * 	const frames
- * method frameActual(){
- * return frameActual}
- * 	method animar(){
- * 		if (frameActual == self.frames()){
- * 		frameActual == 1}else
- * 		{frameActual +=1 }}
- * 	}
- */
+class Animado{
+ var frameActual = 1
+ const property frames
  
+ method frameActual(){
+ 	return "frame" + frameActual.toString()
+ }
+ 	
+ method animar(){
+ if (frameActual == self.frames()){
+ 		frameActual = 1
+ 	}
+ else{
+ 	frameActual +=1
+    }
+  }
+}
+
+object managerAnimados{
+	const personajesAnimados = #{}
+	method aniadirPersonajeAnimado(personaje){
+		personajesAnimados.add(personaje)
+	}
+	method removerPersonajeAnimado(personaje){
+		personajesAnimados.remove(personaje)
+	}
+	method animarPersonajes(){
+		personajesAnimados.forEach({personaje => personaje.animar()})
+	}
+}
+
+
+
+class Enemigo inherits Animado{
  //+ self.frameActual().toString()
  
  /*method accion(){
@@ -36,7 +57,7 @@ class Enemigo {
 	}
 
 	method image() {
-		return direccion.toString().capitalize() + ".png"
+		return direccion.toString().capitalize() + "_" + self.frameActual() + ".png"
 	}
 	//
 
@@ -74,7 +95,7 @@ class Enemigo {
 
 }
 
-class Manoplas inherits Enemigo {
+class Manoplas inherits Enemigo (frames = 3) {
 
 
 	override method image() = "Manoplas_" + super() 
@@ -154,7 +175,7 @@ object manoplas {
 object octorok {
 
 	method crearNuevo() {
-		return new Octorok(position = randomizer.emptyPosition(), direccion = derecha, hp = 10, velocidadMovimiento = 1000, velocidadAtaque = 1000, danio = 10)
+		return new Octorok(position = randomizer.emptyPosition(), direccion = derecha, hp = 10, velocidadMovimiento = 1000, velocidadAtaque = 1000, danio = 10,frames = 2)
 	}
 }
 
@@ -167,6 +188,7 @@ object enemyManager {
 		if (enemigos.size() < 5) {
 			const enemigoGenerado = enemigo.crearNuevo()
 			game.addVisual(enemigoGenerado)
+			managerAnimados.aniadirPersonajeAnimado(enemigoGenerado)
 			enemigoGenerado.iniciar()
 			game.onCollideDo(enemigoGenerado, { algo => algo.collision(enemigoGenerado)})
 		}
@@ -174,6 +196,7 @@ object enemyManager {
 
 	method enemyDerrotado(enemigo) {
 		game.removeVisual(enemigo)
+		managerAnimados.removerPersonajeAnimado(enemigo)
 		enemigos.remove(enemigo)
 		enemigosDerrotados.add(enemigo)
 		self.chequearVictoria()

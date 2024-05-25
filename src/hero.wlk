@@ -8,18 +8,19 @@ object hero {
 
 	var property position = game.at(1,1)
 	var property direccion = abajo
-	var property hp = managerVidaHeroe
+	const property hp = managerVidaHeroe
 	var property estado = vivo
 	const property bando = self
+	var puedeDisparar = true
+	
+	
 
 	method image() {
 		return "Hero_" + direccion.toString().capitalize() + "_" + estado.toString() + ".png"
 	}
-	method hp(){
-		return hp
-	}
 
 	method dispararHacia(_direccion) {
+		if (self.puedeDisparar()){
 		new Proyectil(
 			direccion = _direccion, 
 			position = self.position(), 
@@ -28,8 +29,16 @@ object hero {
 			velocidad = 300,
 			bando = self
 		).disparar()
+		self.iniciarRecarga()
+		}
 	}
-
+	method puedeDisparar(){
+		return puedeDisparar
+	}
+	method iniciarRecarga(){
+		puedeDisparar = false
+		game.schedule(350, {puedeDisparar = true})
+	}
 	method mover(_direccion) {
 		if(self.puedeMover(_direccion)){
 			direccion = _direccion
@@ -48,7 +57,7 @@ object hero {
 	}
 	
 	method recibirDanio(cantidad){
-			hp.reducirVida(cantidad)
+		hp.reducirVida(cantidad)
 	}
 
 	
