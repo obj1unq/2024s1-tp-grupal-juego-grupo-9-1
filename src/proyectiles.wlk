@@ -8,10 +8,10 @@ import nivel.*
 class Proyectil {
 	var property direccion
 	var property position
-	var property tipoProyectil
-	var property danio
-	var property velocidad
-	var property bando
+	const tipoProyectil
+	const danio
+	const velocidad
+	const property bando
 	
 	method image(){
 		return "Proyectil_" + tipoProyectil.toString() + ".png"

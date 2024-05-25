@@ -52,6 +52,7 @@ object escenario {
 	}
 	
 	method pasarDeNivel(){
+		const corazonesHeroe = hero.hp().corazones()
 		enemyManager.resetearContador()
 		if (nivelActual < niveles.size()){
 			game.removeVisual(self.nivel())
@@ -59,6 +60,7 @@ object escenario {
 			game.clear()
 			hero.estado(vivo)
 			hero.position(randomizer.emptyPosition())
+			hero.hp().corazones(corazonesHeroe)
 			self.init()		
 		} else{
 			game.say(hero, "Juego completado! Felicitaciones!")
@@ -70,7 +72,7 @@ object escenario {
 
 		game.addVisual(self.nivel())
 		game.addVisual(hero)
-		managerVidaHeroe.iniciar()
+		hero.hp().iniciar()
 		
 		// ACCIONES DE HERO
 		keyboard.w().onPressDo({hero.mover(arriba)})
