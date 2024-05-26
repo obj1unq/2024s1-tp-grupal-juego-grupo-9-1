@@ -7,8 +7,64 @@ import props.*
 import randomizer.*
 import interfaz.*
 
-class Nivel {
+class LugarConMusica{
+	const property soundtrack
+	method empezarMusica(){
+		self.soundtrack().shouldLoop(true)
+		self.soundtrack().play()
+	}
+	method detenerMusica(){
+		self.soundtrack().stop()
+	}
+}
+object titulo inherits LugarConMusica (soundtrack = game.sound("Title.mp3")){
+	const siguienteParte = instrucciones
+	const property sonidoAvanzar = game.sound("Menu_Avanzar.mp3")
+	method position() = game.origin()
+	method image(){
+		return "titulo.png"
+	}
+	method iniciar(){
+		game.addVisual(self)
+		self.empezarMusica()
+		keyboard.any().onPressDo({
+			self.siguientePantalla()
+			if (not self.sonidoAvanzar().played())self.sonidoAvanzar().play()
+		})
+	}
+	method siguientePantalla(){
+		self.detenerMusica()
+		game.removeVisual(self)
+		game.clear()
+		siguienteParte.iniciar()
+	}
+	override method empezarMusica(){
+		game.schedule(1000, {super()})
+	}
+}
 
+object instrucciones inherits LugarConMusica(soundtrack = game.sound("Instrucciones.mp3")){
+	const property administradorDeNiveles = escenario
+	method image(){
+		return "instrucciones.png"
+	}
+	method position() = game.origin()
+	method iniciar(){
+		game.addVisual(self)
+		self.empezarMusica()
+		game.schedule(4000, {self.avanzarAlNivel()})
+	}
+	method avanzarAlNivel(){
+		game.removeVisual(self)
+		self.detenerMusica()
+		game.clear()
+		self.administradorDeNiveles().init()
+	}
+}
+
+
+
+class Nivel inherits LugarConMusica (soundtrack =game.sound("Castillo.mp3")){
 	const property bordesEscenario = []
 	
 	method image()
@@ -17,6 +73,7 @@ class Nivel {
 	
 	method iniciar(){
 		self.iniciarAnimaciones()
+		self.empezarMusica()	
 		game.onTick(5000, "Aparece enemigo", {enemyManager.crearEnemigo(self.enemigo())})
 	}
 	method iniciarAnimaciones(){
@@ -55,11 +112,12 @@ object escenario {
 		const corazonesHeroe = hero.hp().corazones()
 		enemyManager.resetearContador()
 		if (nivelActual < niveles.size()){
+			self.nivel().detenerMusica()
 			game.removeVisual(self.nivel())
 			nivelActual ++
 			game.clear()
 			hero.estado(vivo)
-			hero.position(randomizer.emptyPosition())
+			hero.position(game.at(1,1))
 			hero.hp().corazones(corazonesHeroe)
 			self.init()		
 		} else{
@@ -73,6 +131,7 @@ object escenario {
 		game.addVisual(self.nivel())
 		game.addVisual(hero)
 		hero.hp().iniciar()
+		hero.iniciarRecarga()
 		
 		// ACCIONES DE HERO
 		keyboard.w().onPressDo({hero.mover(arriba)})
@@ -99,7 +158,7 @@ object escenario {
 }
 
 object nivel1 inherits Nivel {
-		
+			
 			override method totalEnemigos() = 1
 			
 			override method bordesEscenario() = [cuadranteFactory.nuevo(1,9,1,5) , cuadranteFactory.nuevo(1,4,6,9), cuadranteFactory.nuevo(5,7,8,9), cuadranteFactory.nuevo(8,13,5,9)]
@@ -121,7 +180,7 @@ object nivel2 inherits Nivel {
 			
 }
 
-object nivel3 inherits Nivel {
+object nivel3 inherits Nivel (soundtrack = game.sound("Boss.mp3")){
 		
 			override method totalEnemigos() = 1
 						
@@ -130,6 +189,7 @@ object nivel3 inherits Nivel {
 			override method enemigo() = jefe
 			
 			override method iniciar(){
+				self.empezarMusica()
 				muroInvisibleJefe.crearBarreraAt(game.height()-4)
 				self.iniciarAnimaciones()
 				game.schedule(1000, {enemyManager.crearEnemigo(self.enemigo())})

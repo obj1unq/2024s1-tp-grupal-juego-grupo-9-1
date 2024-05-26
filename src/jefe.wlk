@@ -18,6 +18,7 @@ object jefe inherits Enemigo (danio = 10, position = game.at(7,9), direccion = d
 	var property moviendoA = derecha
 	const partes = []
 	var property cadencia = 4000
+	const property sonidoSepararParte ="Boss-Separar-Parte.mp3"
 
 
 	override method iniciar() {
@@ -72,14 +73,17 @@ object jefe inherits Enemigo (danio = 10, position = game.at(7,9), direccion = d
 	}
 
 	method separarParte() {
+		const sonido = game.sound (self.sonidoSepararParte())
 		// este si se agregan mas bordes que sean con objetos asi no aparece encima una parte
 		// Cada vez que se separa una parte, se incrementa la velocidad y cadencia de proyectil de boss y partes por igual
 		self.subirVelocidadProyectil(1100, 120)
 		self.subirVelocidadMovimiento(100)
 		const parte = new ParteBoss(position = randomizer.emptyPosition())
+		sonido.play()
 		parte.iniciar()
 		partes.add(parte)
 		managerAnimados.aniadirPersonajeAnimado(parte)
+		game.onCollideDo(parte, { algo => algo.collision(parte)})
 	}
 
 	method escudos() {
@@ -99,6 +103,8 @@ object jefe inherits Enemigo (danio = 10, position = game.at(7,9), direccion = d
 	}
 
 	override method recibirDanio(cantidad) {
+		const sonido = game.sound(self.sonidoDanio())
+		sonido.play()
 		if (self.aguanteEscudo() > 0) {
 			aguanteEscudo = (aguanteEscudo - cantidad).max(0)
 			self.comprobarCantidadEscudos()
@@ -133,7 +139,8 @@ class ParteBoss inherits Animado (frames = 5){
 
 	var property direccionMirada = direcciones.mirandoAlHeroe(self.position())
 	var property position
-	
+	const property sonidoImpacto = "Parte_NoRecibe_Daño.mp3"
+	var teletransportandose = false
 	
 	method bando() = enemigo
 
@@ -145,8 +152,14 @@ class ParteBoss inherits Animado (frames = 5){
 	method esAtravesable() {
 		return false
 	}
+	method collision(personaje) {
+		personaje.recibirDanio(5)
+	}
 
-	method image() = "Boss_Parte_"+ self.frameActual() + ".png"
+	method image(){
+	return if (not teletransportandose) {"Boss_Parte_"+ self.frameActual() + ".png"}
+			else {"Boss_Parte_Teleport.png"}
+	}
 	
 	method disparar() {
 		direccionMirada = direcciones.mirandoAlHeroe(self.position())
@@ -158,6 +171,19 @@ class ParteBoss inherits Animado (frames = 5){
 			velocidad = jefe.velocidadAtaque(),
 			bando = self.bando()
 		).disparar()
+		game.schedule(250,{self.teleportarse()})
+	}
+	
+	method teleportarse(){
+		teletransportandose = true
+		game.schedule(250, {self.position(randomizer.emptyPosition())
+							teletransportandose = false
+		})
+	}
+	
+	method recibirDanio(danio){
+		const sonido =game.sound(self.sonidoImpacto())
+		sonido.play()
 	}
 
 	method eliminarse() {

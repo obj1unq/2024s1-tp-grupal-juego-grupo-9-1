@@ -39,12 +39,11 @@ object managerAnimados{
 
 
 class Enemigo inherits Animado{
- //+ self.frameActual().toString()
- 
  /*method accion(){
 	 * 	if (estaElHeroeA(direccion)) ataca(direccion)
 	 * 	else mover(direccion)}
 	 */
+	const property sonidoDanio = "Enemigo_Daniado.mp3"
 	var property position
 	var property direccion
 	var property hp
@@ -71,7 +70,9 @@ class Enemigo inherits Animado{
 	method activar(){self.mover()}
 
 	method recibirDanio(_danio) {
+		const sonido = game.sound(self.sonidoDanio())
 		hp -= _danio
+		sonido.play()
 		self.comprobarHp()
 	}
 
