@@ -12,6 +12,7 @@ object hero {
 	var property estado = vivo
 	const property bando = self
 	var puedeDisparar = true
+	const property sonidoDanio = "Hero_Daniado.mp3"
 	
 	
 
@@ -29,7 +30,10 @@ object hero {
 			velocidad = 300,
 			bando = self
 		).disparar()
+		direccion = _direccion
 		self.iniciarRecarga()
+		estado = disparandoArco
+		game.schedule(100, {self.volverALaNormalidad()})
 		}
 	}
 	method puedeDisparar(){
@@ -42,8 +46,13 @@ object hero {
 	method mover(_direccion) {
 		if(self.puedeMover(_direccion)){
 			direccion = _direccion
-			position = direccion.siguiente(position)			
+			position = direccion.siguiente(position)
+			estado = moviendo
+			game.schedule(100, {self.volverALaNormalidad()})			
 		}
+	}
+	method volverALaNormalidad(){
+		if(estado.puedeCambiarEstado()) estado = vivo
 	}
 	
 	method validarMover(_direccion){
@@ -58,8 +67,12 @@ object hero {
 	
 	method recibirDanio(cantidad){
 		hp.reducirVida(cantidad)
+		self.sonidoDeRecibirDanio()
 	}
-
+	method sonidoDeRecibirDanio(){
+		const sonido = game.sound(self.sonidoDanio())
+		sonido.play()
+	}
 	
 	method derrotado(){
 		estado = derrotado
@@ -79,29 +92,31 @@ object hero {
 
 }
 
-object vivo{
-	
-	method puedeMover() = true
-	
+class EstadoHeroe{
+	const property puedeCambiarEstado = true
+	const property puedeMover = true
 	method activar(){}
 }
 
-object derrotado{
+object vivo inherits EstadoHeroe{
+}
+object disparandoArco inherits EstadoHeroe{
+}
+object moviendo inherits EstadoHeroe{
+}
+
+object derrotado inherits EstadoHeroe(puedeCambiarEstado = false, puedeMover = false){
 	
-	method puedeMover() = false
-	
-	method activar(){
+	override method activar(){
 		game.say(hero, "Me han derrotado!")
 		game.schedule(2500, {game.stop()})
 	}
 }
 
 
-object ganador{
+object ganador inherits EstadoHeroe(puedeCambiarEstado = false, puedeMover = false){
 	
-	method puedeMover() = false
-	
-	method activar(){
+	override method activar(){
 		game.say(hero, "Victoria! He derrotado al jefazo!")
 	}	
 }

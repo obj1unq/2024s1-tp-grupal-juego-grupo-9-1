@@ -12,7 +12,7 @@ program juego {
 	game.title("game")
 	game.width(15)
 	game.height(12)	
-	escenario.init()
+	titulo.iniciar()
 
 	game.start() 
 }
