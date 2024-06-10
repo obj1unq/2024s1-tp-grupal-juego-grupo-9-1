@@ -32,12 +32,18 @@ object hero {
 		).disparar()
 		direccion = _direccion
 		self.iniciarRecarga()
-		estado = disparandoArco
-		game.schedule(100, {self.volverALaNormalidad()})
+		self.cambiarA_SiPuede(disparandoArco)
+		game.schedule(100, {self.cambiarA_SiPuede(vivo)})
 		}
 	}
 	method puedeDisparar(){
-		return puedeDisparar
+		return puedeDisparar && estado.puedeCambiarEstado()
+	}
+	method cambiarDeDireccionSiPuede(_direccion){
+		if (estado.puedeMover()) direccion = _direccion
+	}
+	method cambiarA_SiPuede(_estado){
+		if(estado.puedeCambiarEstado()) estado = _estado
 	}
 	method iniciarRecarga(){
 		puedeDisparar = false
@@ -48,11 +54,8 @@ object hero {
 			direccion = _direccion
 			position = direccion.siguiente(position)
 			estado = moviendo
-			game.schedule(100, {self.volverALaNormalidad()})			
+			game.schedule(100, {self.cambiarA_SiPuede(vivo)})			
 		}
-	}
-	method volverALaNormalidad(){
-		if(estado.puedeCambiarEstado()) estado = vivo
 	}
 	
 	method validarMover(_direccion){
@@ -96,6 +99,7 @@ class EstadoHeroe{
 	const property puedeCambiarEstado = true
 	const property puedeMover = true
 	method activar(){}
+	
 }
 
 object vivo inherits EstadoHeroe{
