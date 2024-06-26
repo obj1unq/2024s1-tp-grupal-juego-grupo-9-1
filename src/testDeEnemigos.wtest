@@ -69,7 +69,7 @@ describe "test enemigo" {
 		manoplasMob.mover()
 		manoplasMob.mover()
 		assert.that(manoplasMob.position() == hero.position())
-		hero.hp().reducirVida(octorokMob.danio())
+		hero.hp().reducirVida(manoplasMob.danio())
 		assert.equals(15, hero.hp().corazonActual().cantidadVida())
 	}
 
