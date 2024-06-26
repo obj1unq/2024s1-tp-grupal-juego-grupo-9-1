@@ -1,8 +1,18 @@
 import wollok.game.*
-import pepita.*
+import hero.*
+import jefe.*
+import direcciones.*
+import props.*
+import personaje.*
+import nivel.*
 
 program juego {
-	game.title("Juego Base")
-	game.addVisual(pepita)
-	game.start()
+
+	
+	game.title("game")
+	game.width(15)
+	game.height(12)	
+	titulo.iniciar()
+
+	game.start() 
 }

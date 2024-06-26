@@ -1,0 +1,50 @@
+import wollok.game.*
+import hero.*
+import personaje.*
+import direcciones.*
+import proyectiles.*
+
+describe "test enemigo" {
+
+	const manoplasMob = new Manoplas(position = game.at(1, 1), direccion = derecha, hp = 10, velocidadMovimiento = 1000, danio = 5)
+
+	method initialize() {
+		// LOS TESTS SE REALIZARAN EN EL NIVEL 1
+		// BORDES: 
+		// Cuadrante 1: (1,9,1,5) 
+		// Cuadrante 2: (1,4,6,9)
+		// Cuadrante 3: (5,7,8,9)
+		// Cuadrante 4: (8,13,5,9)
+		game.clear()
+		game.width(15)
+		game.height(12)
+		game.addVisual(hero)
+		hero.hp().iniciar()
+	}
+
+	test "Hero sufre danio y pierde un corazon, pero queda vivo" {
+		game.addVisual(manoplasMob)
+		hero.position(game.at(3, 3))
+		manoplasMob.mover()
+		manoplasMob.mover()
+		manoplasMob.mover()
+		manoplasMob.mover()
+		assert.that(manoplasMob.position() == hero.position())
+		hero.hp().reducirVida(manoplasMob.danio())
+		hero.hp().reducirVida(manoplasMob.danio())
+		hero.hp().reducirVida(manoplasMob.danio())
+		assert.equals(5, hero.hp().corazonActual().cantidadVida())
+		hero.hp().reducirVida(manoplasMob.danio())
+		assert.equals(20, hero.hp().corazonActual().cantidadVida())
+		assert.that(hero.hp().tieneVida())
+	}
+
+	test "Hero sufre danio y muere" { // Hero va perdiendo de a 5 puntos de vida fijos
+		hero.hp().reducirVida(20)
+		hero.hp().reducirVida(20)
+		hero.hp().reducirVida(20)
+		assert.notThat(hero.hp().tieneVida())
+	}
+
+}
+
