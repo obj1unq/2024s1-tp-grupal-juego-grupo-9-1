@@ -114,7 +114,7 @@ class Manoplas inherits Enemigo (frames = 3) {
 
 class Octorok inherits Enemigo {
 
-	var property moviendoA = [ derecha, arriba ].anyOne()
+	var property moviendoA
 
 	override method image() = "Octorok_" + super()
 
@@ -176,7 +176,7 @@ object manoplas {
 object octorok {
 
 	method crearNuevo() {
-		return new Octorok(position = randomizer.emptyPosition(), direccion = derecha, hp = 10, velocidadMovimiento = 1000, velocidadAtaque = 1000, danio = 10,frames = 2)
+		return new Octorok(position = randomizer.emptyPosition(), direccion = derecha, hp = 10, moviendoA = [ derecha, arriba ].anyOne(), velocidadMovimiento = 1000, velocidadAtaque = 1000, danio = 10,frames = 2)
 	}
 }
 

@@ -49,7 +49,7 @@ class CorazonVida{
 		return "corazon_" + cantidadVida.toString() + ".png"
 	}
 	method reducirVida(cantidad){
-		cantidadVida = (cantidadVida - cantidad.max(0).min(5)).max(0)
+		cantidadVida = (cantidadVida - cantidad.max(0)).max(0)
 	}
 	method estaVacio(){
 		return cantidadVida == 0

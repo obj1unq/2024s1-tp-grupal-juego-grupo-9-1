@@ -9,7 +9,7 @@ class Proyectil {
 	var property direccion
 	var property position
 	const tipoProyectil
-	const danio
+	const property danio
 	const velocidad
 	const property bando
 	
