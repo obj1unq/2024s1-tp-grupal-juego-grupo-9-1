@@ -9,10 +9,23 @@ import interfaz.*
 
 class LugarConMusica{
 	const property soundtrack
+	const property victorySound = game.sound("victory.mp3")
+	const property victoryTime = 5500
+	
 	method empezarMusica(){
 		self.soundtrack().shouldLoop(true)
 		self.soundtrack().play()
 	}
+	
+	method sonidoVictoria(){
+		self.victorySound().play()
+	}
+	
+	method victoryTheme(){
+		self.sonidoVictoria()
+		game.schedule(victoryTime,{self.victorySound().stop()})
+	}
+		
 	method detenerMusica(){
 		self.soundtrack().stop()
 	}
@@ -62,8 +75,6 @@ object instrucciones inherits LugarConMusica(soundtrack = game.sound("Instruccio
 	}
 }
 
-
-
 class Nivel inherits LugarConMusica (soundtrack =game.sound("Castillo.mp3")){
 	const property bordesEscenario = []
 	
@@ -112,7 +123,6 @@ object escenario {
 		const corazonesHeroe = hero.hp().corazones()
 		enemyManager.resetearContador()
 		if (nivelActual < niveles.size()){
-			self.nivel().detenerMusica()
 			game.removeVisual(self.nivel())
 			nivelActual ++
 			game.clear()
@@ -144,22 +154,19 @@ object escenario {
 		keyboard.down().onPressDo({hero.dispararHacia(abajo)})
 		game.onCollideDo(hero, { algo => algo.collision(hero) })
 		self.nivel().iniciar()
-		
-		
-		
 	}
 	
 	method nivelCompletado(){
 		hero.victoria()
-		game.schedule(2000, {self.pasarDeNivel()})
-		
+		self.nivel().detenerMusica()
+		self.nivel().victoryTheme()
+		game.schedule(self.nivel().victoryTime(), {self.pasarDeNivel()})		
 	}
-
 }
 
 object nivel1 inherits Nivel {
 			
-			override method totalEnemigos() = 1
+			override method totalEnemigos() = 5
 			
 			override method bordesEscenario() = [cuadranteFactory.nuevo(1,9,1,5) , cuadranteFactory.nuevo(1,4,6,9), cuadranteFactory.nuevo(5,7,8,9), cuadranteFactory.nuevo(8,13,5,9)]
 			
@@ -170,7 +177,7 @@ object nivel1 inherits Nivel {
 
 object nivel2 inherits Nivel {
 			
-			override method totalEnemigos() = 1
+			override method totalEnemigos() = 10
 						
 			override method bordesEscenario() = [cuadranteFactory.nuevo(1,7,1,5) , cuadranteFactory.nuevo(8,13,1,8)]
 			

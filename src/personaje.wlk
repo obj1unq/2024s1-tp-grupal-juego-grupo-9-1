@@ -186,8 +186,9 @@ object enemyManager {
 	const property enemigosDerrotados = []
 
 	method crearEnemigo(enemigo) {
-		if (enemigos.size() < 5) {
+		if (enemigos.size() < 5 && not self.todosEnemigosDerrotados()) {
 			const enemigoGenerado = enemigo.crearNuevo()
+			enemigos.add(enemigoGenerado)
 			game.addVisual(enemigoGenerado)
 			managerAnimados.aniadirPersonajeAnimado(enemigoGenerado)
 			enemigoGenerado.iniciar()
@@ -204,10 +205,13 @@ object enemyManager {
 	}
 	
 	method chequearVictoria(){
-		if(enemigosDerrotados.size() == escenario.nivel().totalEnemigos()){
+		if(self.todosEnemigosDerrotados()){
+			enemigos.forEach({enemigo => enemigo.enemyDerrotado()})
 			escenario.nivelCompletado()
 		}
 	}
+	
+	method todosEnemigosDerrotados() =	enemigosDerrotados.size() >= escenario.nivel().totalEnemigos()
 	
 	method resetearContador(){
 		enemigosDerrotados.clear()

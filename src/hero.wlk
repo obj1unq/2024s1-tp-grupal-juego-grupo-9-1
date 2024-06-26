@@ -121,6 +121,6 @@ object derrotado inherits EstadoHeroe(puedeCambiarEstado = false, puedeMover = f
 object ganador inherits EstadoHeroe(puedeCambiarEstado = false, puedeMover = false){
 	
 	override method activar(){
-		game.say(hero, "Victoria! He derrotado al jefazo!")
+		game.say(hero, "Victoria! He vencido al mal!")
 	}	
 }
