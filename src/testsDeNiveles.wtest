@@ -1,0 +1,69 @@
+import wollok.game.*
+import hero.*
+import direcciones.*
+import nivel.*
+
+describe "test Niveles" {
+
+		method initialize() {
+		// BORDES: (xMin, xMax, yMin, yMax)
+		// Cuadrante 1: (1,9,1,5) 
+		// Cuadrante 2: (1,4,6,9)
+		// Cuadrante 3: (5,7,8,9)
+		// Cuadrante 4: (8,13,5,9)
+		game.clear()
+		game.width(15)
+		game.height(12)
+		game.addVisual(hero)
+		hero.hp().iniciar()
+	}
+	
+	test "Heroe no puede avanzar mas alla de bordes"{
+		hero.position(game.at(9,1)) 				// Primer Esquina inferior derecha
+		assert.notThat(hero.puedeMover(derecha))
+		assert.notThat(hero.puedeMover(abajo))
+		hero.position(game.at(13,5)) 				// Segunda esquina inferior derecha
+		assert.notThat(hero.puedeMover(abajo))
+		assert.notThat(hero.puedeMover(derecha))
+		hero.position(game.at(7,5)) 				//Arriba hay un obstaculo
+		assert.notThat(hero.puedeMover(arriba))
+		assert.that(hero.puedeMover(derecha))
+		assert.that(hero.puedeMover(izquierda)) 
+		hero.position(game.at(1,9))					// Esquina Superior Izquierda
+		assert.notThat(hero.puedeMover(arriba))
+		assert.notThat(hero.puedeMover(izquierda))
+		hero.position(game.at(13,5))				// Esquiba Superior Derecha
+		assert.notThat(hero.puedeMover(abajo))
+		assert.notThat(hero.puedeMover(derecha))
+	}
+	
+	test "Se pasa de nivel"{
+		assert.equals(nivel1, escenario.nivel())
+		escenario.nivelActual(2)
+		assert.equals(nivel2, escenario.nivel())
+	}
+	
+		test "Se pasa de nivel y cambia escenario"{
+			/*
+			 * Cuadrante1: (1,7,1,5) 
+			 * Cuadrante2: (8,13,1,8)
+			 */
+		assert.equals(nivel1, escenario.nivel())
+		escenario.nivelActual(2)
+		assert.equals(nivel2, escenario.nivel())
+		hero.position(game.at(9,1)) 				// Ahora puede mover a la deracha
+		assert.that(hero.puedeMover(derecha))
+		assert.notThat(hero.puedeMover(abajo))
+		hero.position(game.at(13,5)) 				// Ahora puede mover abajo
+		assert.that(hero.puedeMover(abajo))
+		assert.notThat(hero.puedeMover(derecha))
+		hero.position(game.at(1,9))					// Esquina Superior Izquierda es igual
+		assert.notThat(hero.puedeMover(arriba))
+		assert.notThat(hero.puedeMover(izquierda))
+		hero.position(game.at(13,5))				// Ahora si puede avanzar abajo
+		assert.that(hero.puedeMover(abajo))
+		assert.notThat(hero.puedeMover(derecha))
+	}
+	
+
+}

@@ -1,36 +1,84 @@
 import wollok.game.*
 import hero.*
+import personaje.*
+import direcciones.*
+import proyectiles.*
 
-/*
- * 
- 
- 
- 
- 
- 
 describe "test enemigo" {
-	
-	const enemigo = new Minion(position = game.origin())
-	
+
+	const manoplasMob = new Manoplas(position = game.at(1, 1), direccion = derecha, hp = 10, velocidadMovimiento = 1000, danio = 10)
+	const octorokMob = new Octorok(position = game.at(8, 1), direccion = derecha, moviendoA = derecha, hp = 40, velocidadMovimiento = 1000, danio = 10, frames = 2)
+
 	method initialize() {
+		// LOS TESTS SE REALIZARAN EN EL NIVEL 1
+		// BORDES: 
+		// Cuadrante 1: (1,9,1,5) 
+		// Cuadrante 2: (1,4,6,9)
+		// Cuadrante 3: (5,7,8,9)
+		// Cuadrante 4: (8,13,5,9)
 		game.clear()
-		game.height(5)
-		game.width(5)
+		game.width(15)
+		game.height(12)
 		game.addVisual(hero)
-		game.addVisual(enemigo)
+		hero.hp().iniciar()
 	}
 
-	test "enemigo se encuentra con hero" {
-		enemigo.mover()
-		assert.equals(game.at(0, 1), enemigo.position())
-		enemigo.mover()
-		assert.equals(game.at(1, 1), enemigo.position())
-		enemigo.mover()
-		assert.equals(game.at(1, 2), enemigo.position())
-		enemigo.mover()
-		assert.equals(game.at(2, 2), enemigo.position())
-		assert.that(enemigo.position() == hero.position())
+	test "enemigo Manoplas se encuentra con hero" {
+		game.addVisual(manoplasMob)
+		hero.position(game.at(3, 3))
+		manoplasMob.mover()
+		assert.equals(game.at(1, 2), manoplasMob.position())
+		manoplasMob.mover()
+		assert.equals(game.at(2, 2), manoplasMob.position())
+		manoplasMob.mover()
+		assert.equals(game.at(2, 3), manoplasMob.position())
+		manoplasMob.mover()
+		assert.equals(game.at(3, 3), manoplasMob.position())
+		assert.that(manoplasMob.position() == hero.position())
 	}
-	
+
+	test "enemigo Octorok encuentra borde y rebota" {
+		game.addVisual(octorokMob)
+		octorokMob.mover()
+		assert.equals(game.at(9, 1), octorokMob.position())
+		octorokMob.mover()
+		assert.equals(game.at(8, 1), octorokMob.position())
+		octorokMob.mover()
+		assert.equals(game.at(7, 1), octorokMob.position())
+	}
+
+	test "enemigo Octorok ve heroe y se dispone a atacar" {
+		game.addVisual(octorokMob)
+		hero.position(game.at(7, 4))
+		octorokMob.mover()
+		assert.equals(game.at(9, 1), octorokMob.position())
+		assert.notThat(octorokMob.sePuedeDispararAHero())
+		octorokMob.mover()
+		assert.equals(game.at(8, 1), octorokMob.position())
+		assert.notThat(octorokMob.sePuedeDispararAHero())
+		octorokMob.mover()
+		assert.equals(game.at(7, 1), octorokMob.position())
+		assert.that(octorokMob.sePuedeDispararAHero())
+	}
+
+	test "enemigo Manoplas se encuentra con hero y le quita vida" {
+		game.addVisual(manoplasMob)
+		hero.position(game.at(3, 3))
+		manoplasMob.mover()
+		manoplasMob.mover()
+		manoplasMob.mover()
+		manoplasMob.mover()
+		assert.that(manoplasMob.position() == hero.position())
+		hero.hp().reducirVida(octorokMob.danio())
+		assert.equals(15, hero.hp().corazonActual().cantidadVida())
+	}
+
+	test "enemigo Manoplas recibe flechazo y muere" {
+		game.addVisual(manoplasMob)
+		const flecha = new Proyectil(direccion = derecha, position = manoplasMob.position(), tipoProyectil = "hero_derecha", danio = 10, velocidad = 300, bando = hero)
+		assert.that(flecha.position() == manoplasMob.position())
+		assert.that(manoplasMob.hp() - flecha.danio() == 0)
+	} // NO SE PUEDEN TESTEAR COLISIONES DADO QUE LAS MISMAS TIENEN ASIGNADOS SONIDOS
+
 }
- */
+
